@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Structure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Project Structure</h1>
+        
+        <!-- Structure preview -->
+        <div class="structure">
+            <h2>Current Structure:</h2>
+            <pre id="structurePreview">{{ structure }}</pre>
+        </div>
+
+        <!-- Add Folder -->
+        <form id="addFolderForm">
+            <input type="text" id="folderName" placeholder="Enter folder name" required>
+            <button type="submit">Add Folder</button>
+        </form>
+
+        <!-- Add File -->
+        <form id="addFileForm">
+            <input type="text" id="fileName" placeholder="Enter file name" required>
+            <button type="submit">Add File</button>
+        </form>
+
+        <!-- Navigate to Folder -->
+        <form id="navigateForm">
+            <input type="text" id="navigateFolder" placeholder="Enter folder to navigate to" required>
+            <button type="submit">Navigate</button>
+        </form>
+
+        <!-- Exit Current Folder -->
+        <button id="exitButton">Exit Current Folder</button>
+
+        <!-- Done Button -->
+        <button id="doneButton">Done</button>
+
+
+        <!-- Alert Message -->
+        <div class="alert" id="alertMessage"></div>
+    </div>
+
+    <script>
+        // Utility function to show alert messages
+        function showAlert(message, type) {
+            const alert = document.getElementById("alertMessage");
+            alert.textContent = message;
+            alert.classList.remove("error");
+            if (type === "error") {
+                alert.classList.add("error");
+            }
+            alert.style.display = "block";
+            setTimeout(() => {
+                alert.style.display = "none";
+            }, 3000);
+        }
+
+        // Add Folder Form Submit
+        document.getElementById("addFolderForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let folderName = document.getElementById("folderName").value;
+            fetch("/add_folder", {
+                method: "POST",
+                body: new URLSearchParams({ 'folder_name': folderName }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showAlert(data.message, "success");
+                document.getElementById("structurePreview").textContent = data.structure;
+            })
+            .catch(() => {
+                showAlert("Failed to add folder.", "error");
+            });
+        });
+
+        // Add File Form Submit
+        document.getElementById("addFileForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let fileName = document.getElementById("fileName").value;
+            fetch("/add_file", {
+                method: "POST",
+                body: new URLSearchParams({ 'file_name': fileName }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showAlert(data.message, "success");
+                document.getElementById("structurePreview").textContent = data.structure;
+            })
+            .catch(() => {
+                showAlert("Failed to add file.", "error");
+            });
+        });
+
+        // Navigate Folder Form Submit
+        document.getElementById("navigateForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let folderName = document.getElementById("navigateFolder").value;
+            fetch("/navigate", {
+                method: "POST",
+                body: new URLSearchParams({ 'folder_name': folderName }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showAlert(data.message, "success");
+                document.getElementById("structurePreview").textContent = data.structure;
+            })
+            .catch(() => {
+                showAlert("Failed to navigate.", "error");
+            });
+        });
+
+        // Exit Button Click
+        document.getElementById("exitButton").addEventListener("click", function() {
+            fetch("/exit", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    showAlert(data.message, "success");
+                    document.getElementById("structurePreview").textContent = data.structure;
+                })
+                .catch(() => {
+                    showAlert("Failed to exit folder.", "error");
+                });
+        });
+        // Done Button Click
+document.getElementById("doneButton").addEventListener("click", function() {
+    fetch("/done", { method: "POST" })
+        .then(response => response.json())
+        .then(data => {
+            showAlert(data.message, "success");
+            document.getElementById("structurePreview").textContent = data.structure;
+        })
+        .catch(() => {
+            showAlert("Failed to mark as done.", "error");
+        });
+});
+
+    </script>
+</body>
+</html>

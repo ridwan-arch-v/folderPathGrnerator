@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result - Folder and File Generator</title>
+</head>
+<body>
+    <h1>Struktur Project</h1>
+    <ul>
+        {% for item in structure_display %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Perintah CMD/Powershell</h2>
+    <ul>
+        {% for command in commands %}
+            <li>{{ command }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Kembali ke Input</a>
+</body>
+</html>

@@ -1,0 +1,6 @@
+[build]
+  functions = "functions"  # Lokasi serverless functions
+
+[build.environment]
+  FLASK_APP = "functions/flask_app.py"  # Lokasi aplikasi Flask
+  PYTHON_VERSION = "3.8"  # Tentukan versi Python yang digunakan
